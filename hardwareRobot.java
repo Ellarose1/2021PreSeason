@@ -30,9 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+
 
 /**
  * This is NOT an opmode.
@@ -43,6 +46,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class hardwareRobot
 {
+
+    public BNO055IMU imu;
+
+
     /* Public OpMode members. */
     public DcMotor  leftFrontMotor   = null;
     public DcMotor  rightFrontMotor  = null;
@@ -78,7 +85,7 @@ public class hardwareRobot
         leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         leftFrontMotor.setPower(0);
@@ -97,6 +104,21 @@ public class hardwareRobot
         // Define and initialize ALL installed servos.
         servoTester  = hwMap.get(Servo.class, "servoTester");
         servoTester.setPosition(1.0);
+
+
+        // set up IMU
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        imu                             = hwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
+
+
+
     }
  }
 
