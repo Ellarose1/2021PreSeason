@@ -26,8 +26,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Classes;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -36,31 +35,21 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
-
-/**
- * This is NOT an opmode.
- *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
- */
 public class hardwareRobot
 {
 
     public BNO055IMU imu;
-
 
     /* Public OpMode members. */
     public DcMotor  leftFrontMotor   = null;
     public DcMotor  rightFrontMotor  = null;
     public DcMotor  leftBackMotor     = null;
     public DcMotor  rightBackMotor     = null;
+    public DcMotor  armMotor = null;
+    public Servo  clawServo = null;
 
-    public Servo    servoTester    = null;
+    //public Servo    servoTester    = null;
 
-
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -81,17 +70,27 @@ public class hardwareRobot
         rightFrontMotor = hwMap.get(DcMotor.class, "rightFrontMotor");
         leftBackMotor    = hwMap.get(DcMotor.class, "leftBackMotor");
         rightBackMotor    = hwMap.get(DcMotor.class, "rightBackMotor");
+        armMotor    = hwMap.get(DcMotor.class, "armMotor");
+        clawServo = hwMap.get(Servo.class, "clawServo");
+
+
 
         leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
         rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
+
+
 
         // Set all motors to zero power
         leftFrontMotor.setPower(0);
         rightFrontMotor.setPower(0);
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
+        armMotor.setPower(0);
+
+        clawServo.setPosition(0.0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -99,11 +98,8 @@ public class hardwareRobot
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-        // Define and initialize ALL installed servos.
-        servoTester  = hwMap.get(Servo.class, "servoTester");
-        servoTester.setPosition(1.0);
 
 
         // set up IMU
